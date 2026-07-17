@@ -48,7 +48,7 @@ both re-encoded from the original masters with `ffmpeg`:
 | `hero-background.mp4` | 8.0 MB (1920×1080, ~6.6 Mbps) | 5.8 MB (H.264 High, CRF 17, ~4.8 Mbps) | Original 24 fps and 1920×1080 frame retained; faststart |
 | `hero-mobile.mp4` | 8.0 MB full-frame master | 2.0 MB (500×1080, H.264 High, CRF 17) | Portrait crop matching the source's 62% mobile framing; original 24 fps, no scaling or dropped frames, faststart |
 | `turntable.mp4` | 8.4 MB (1756×1180, ~17 Mbps) | 1.1 MB (scaled to 1280w, CRF 24, faststart) | `+` `.webm`/VP9 alt (1.1 MB) |
-| Buttons (4 glass PNGs) | 472 KB | 164 KB (WebP q90, alpha kept) | `ffmpeg` PNG→WebP |
+| Buttons | 472 KB source PNGs | 318 KB total (4 WebP files, alpha kept) | WebP export; the Start asset is shared by desktop and mobile |
 | Pipeline/use-case photos | — | 320 KB total (WebP) | exported directly as WebP |
 
 On desktop, the hero serves one high-quality H.264 MP4 and crossfades between
@@ -110,7 +110,7 @@ underlying generation model separately so the workflow stays reproducible.
 | Asya Kim avatar | Higgsfield · GPT Image 2 | Realistic portrait of Asya Kim, a freelance 3D generalist focused on product visualization and presented as Upwork Top Rated; no text, logos or lettering | 1 | Circular crop, downscaled to 112×112, WebP export |
 | Wireless headphones | Higgsfield · GPT Image 2 | Use the supplied product photo as a loose reference; create a different wireless headphone design on a clean white background | 1 | White-background product crop, WebP export |
 | Hero concept still | Higgsfield · GPT Image 2 | Rework three visual references into a Quadcode AI landing hero for professional 3D designers; English copy, Quadcode AI branding and a light neutral palette | 6 | Selected composition integrated into the live layout; exported as a 1280×720 JPEG poster |
-| Hero animation | Higgsfield · Seedance 2 | Static premium SaaS hero; animate only the 3D character creation process, glass ribbons and subtle particles; seamless 10-second loop | 3 | H.264 and VP9/WebM encodes; dual-video crossfade hides the residual source seam |
+| Hero animation | Higgsfield · Seedance 2 | Static premium SaaS hero; animate only the 3D character creation process, glass ribbons and subtle particles; seamless 10-second loop | 3 | H.264 MP4 encode; dual-video crossfade hides the residual source seam |
 | UFO still | Higgsfield · GPT Image 2 | Generate an original iridescent UFO from the supplied references, using the reference palette and liquid-glass drips; NFT-art finish, no UI or text | 2 | Cropped and exported as the 1280×860 turntable poster |
 | UFO turntable video | Higgsfield · Kling 3.0 Turbo | Camera completes one constant-speed 360° orbit around a centered static UFO and returns to the exact starting angle; background unchanged | 2 | Downscaled to 1280×860; H.264 and VP9/WebM encodes; lazy loading and canvas drag-scrubbing |
 | Pipeline 01 — Concept | Higgsfield · GPT Image 2 | Ancient stone golem with mossy runes, painterly concept sketch, rough brushstrokes, white background | 1 | WebP export |
