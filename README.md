@@ -46,7 +46,7 @@ both re-encoded from the original masters with `ffmpeg`:
 | Asset | Before | After | How |
 |---|---|---|---|
 | `hero-background.mp4` | 8.0 MB (1920×1080, ~6.6 Mbps) | 5.8 MB (H.264 High, CRF 17, ~4.8 Mbps) | Original 24 fps and 1920×1080 frame retained; faststart |
-| `hero-mobile.mp4` | 8.0 MB full-frame master | 2.6 MB (500×1080, H.264 High, CRF 17) | Portrait crop from the master; original 24 fps, no scaling or dropped frames, faststart |
+| `hero-mobile.mp4` | 8.0 MB full-frame master | 2.0 MB (500×1080, H.264 High, CRF 17) | Portrait crop matching the source's 62% mobile framing; original 24 fps, no scaling or dropped frames, faststart |
 | `turntable.mp4` | 8.4 MB (1756×1180, ~17 Mbps) | 1.1 MB (scaled to 1280w, CRF 24, faststart) | `+` `.webm`/VP9 alt (1.1 MB) |
 | Buttons (4 glass PNGs) | 472 KB | 164 KB (WebP q90, alpha kept) | `ffmpeg` PNG→WebP |
 | Pipeline/use-case photos | — | 320 KB total (WebP) | exported directly as WebP |

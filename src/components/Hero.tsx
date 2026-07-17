@@ -243,12 +243,13 @@ export default function Hero() {
           rather than squeezing the desktop canvas down.
           Composition per handoff spec: no overlay of any kind on top of
           the video (no scrim/blur/mask/boxed clip) — the video is full-
-          bleed and object-position is tuned (66% center) so the figure
-          reads clearly in the open middle of the screen. Legibility comes
-          entirely from placement: text lives in the naturally light upper
-          zone right under the header, buttons are pinned to the bottom via
-          margin-top:auto on their wrapper, leaving the whole middle of the
-          screen free for the video. The only readability aid is the same
+          bleed and its portrait crop preserves the source's original 62%
+          framing so the figure reads clearly in the open middle of the
+          screen. Legibility comes entirely from placement: text lives in
+          the naturally light upper zone right under the header, buttons are
+          pinned to the bottom via margin-top:auto on their wrapper, leaving
+          the whole middle of the screen free for the video. The only
+          readability aid is the same
           light text-shadow glow the source itself used — see Hero.css. */}
       <div className="hero-mobile-wrap">
         <div className={`mobile-menu${menuOpen ? ' is-open' : ''}`}>

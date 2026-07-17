@@ -62,11 +62,9 @@
 }
 .hero-video.is-active { opacity: 1; }
 .hero-mobile-video { display: none; }
-/* Mobile: full-bleed, no overlay on top of it at all — see the composition
-   comment on `.hero-main-mobile` below for why. 66% keeps the figure
-   framed in the open middle of the screen (the busiest part of the frame
-   sits right of center), clear of both the header/eyebrow above it and
-   the bottom-pinned buttons below it. */
+/* Mobile: full-bleed, no overlay on top of it at all. The portrait asset is
+   cropped directly from the master at the same framing as the original
+   62% object-position, so no additional runtime scaling is required. */
 @media (max-width: 840px) {
   .hero-video { display: none; }
   .hero-mobile-video {
