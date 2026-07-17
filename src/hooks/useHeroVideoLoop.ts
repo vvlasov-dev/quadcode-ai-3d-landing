@@ -1,4 +1,19 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+
+function prepareMutedInlineVideo(video: HTMLVideoElement | null) {
+  if (!video) return;
+
+  // React sets `muted` as a DOM property and does not guarantee that the
+  // corresponding HTML attribute is present. Set both synchronously from the
+  // callback ref, before the browser makes its first autoplay decision.
+  video.defaultMuted = true;
+  video.muted = true;
+  video.volume = 0;
+  video.playsInline = true;
+  video.setAttribute('muted', '');
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+}
 
 /**
  * Crossfades between two <video> elements playing the same looping clip so the
@@ -10,6 +25,21 @@ export function useHeroVideoLoop() {
   const videoBRef = useRef<HTMLVideoElement | null>(null);
   const mobileVideoRef = useRef<HTMLVideoElement | null>(null);
 
+  const setVideoARef = useCallback((video: HTMLVideoElement | null) => {
+    videoARef.current = video;
+    prepareMutedInlineVideo(video);
+  }, []);
+
+  const setVideoBRef = useCallback((video: HTMLVideoElement | null) => {
+    videoBRef.current = video;
+    prepareMutedInlineVideo(video);
+  }, []);
+
+  const setMobileVideoRef = useCallback((video: HTMLVideoElement | null) => {
+    mobileVideoRef.current = video;
+    prepareMutedInlineVideo(video);
+  }, []);
+
   useEffect(() => {
     const a = videoARef.current;
     const b = videoBRef.current;
@@ -19,17 +49,9 @@ export function useHeroVideoLoop() {
       const mobile = mobileVideoRef.current;
       if (!mobile) return;
 
-      // Keep all autoplay requirements present both as DOM attributes and as
-      // properties. The attributes let Safari decide before React effects run;
-      // the properties cover restored tabs and browsers that defer media setup.
-      mobile.defaultMuted = true;
-      mobile.muted = true;
-      mobile.volume = 0;
+      // Reassert mutable playback state for restored tabs and browsers that
+      // defer media setup. Required attributes were already set by the ref.
       mobile.loop = true;
-      mobile.playsInline = true;
-      mobile.setAttribute('muted', '');
-      mobile.setAttribute('playsinline', '');
-      mobile.setAttribute('webkit-playsinline', '');
 
       const play = () => {
         if (document.visibilityState === 'hidden' || !mobile.paused) return;
@@ -140,5 +162,9 @@ export function useHeroVideoLoop() {
     };
   }, []);
 
-  return { videoARef, videoBRef, mobileVideoRef };
+  return {
+    videoARef: setVideoARef,
+    videoBRef: setVideoBRef,
+    mobileVideoRef: setMobileVideoRef,
+  };
 }
