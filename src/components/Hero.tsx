@@ -161,9 +161,7 @@ function StartWatchButtons({ variant }: { variant: 'desktop' | 'mobile' }) {
         {...noDrag}
       >
         <img
-          src={variant === 'mobile'
-            ? '/assets/buttons/btn-start-mobile-transparent.webp'
-            : '/assets/buttons/btn-start-transparent.webp'}
+          src="/assets/buttons/btn-start-transparent.webp"
           alt=""
           draggable={false}
         />
