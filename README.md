@@ -5,6 +5,8 @@ generalists (Upwork-style) who lose hours dispatching between Midjourney,
 Blender and a separate render pass. Value prop: *prompt → concept → mesh →
 render, in one window.*
 
+[Live deployment](https://155.212.130.99/)
+
 ![Quadcode AI landing page](docs/quadcode-landing-preview.png)
 
 ## Stack
@@ -65,7 +67,14 @@ server's bandwidth is constrained, or serve the videos from behind a CDN with
 range-request support (both files are `faststart`-muxed, so byte-range
 seeking already works without one).
 
-## Deploying to your own server
+## Deployment
+
+The production build is served by nginx at
+[https://155.212.130.99/](https://155.212.130.99/). HTTP redirects to HTTPS;
+the IP endpoint uses a publicly trusted, automatically renewed Let's Encrypt
+certificate.
+
+To deploy another copy, use one of these options:
 
 Three options, pick what fits your box:
 
@@ -104,49 +113,3 @@ underlying generation model separately so the workflow stays reproducible.
 | Pipeline 02 — Mesh | Higgsfield · GPT Image 2 | Same golem as a grey clay 3D viewport render with wireframe overlay, matcap shading and a neutral studio | 1 | Previous stage used as visual reference; WebP export |
 | Pipeline 03 — Materials | Higgsfield · GPT Image 2 | Same golem as a clean PBR look-dev presentation with stone, moss and metal material spheres | 1 | Previous stage used as visual reference; UI/text excluded with a negative prompt; WebP export |
 | Pipeline 04 — Final render | Higgsfield · GPT Image 2 | Same golem as an 8K cinematic final render with key light, volumetric fog, color grading and an Octane-style finish | 1 | Previous stage used as visual reference; WebP export |
-
-The four pipeline frames deliberately reuse the preceding stage as a visual
-reference so the silhouette and viewing angle read as one asset moving from
-concept to production render.
-
-<details>
-<summary><strong>Hero concept prompt</strong></summary>
-
-> Use all supplied images as references and reinterpret the design for
-> Quadcode AI. Replace the content so the landing page speaks to professional
-> 3D designers and communicates that Quadcode AI brings their workflow into
-> one place. Rewrite all page copy in English, replace the logo with Quadcode
-> AI, use a light neutral modern palette, and preserve the reference
-> composition and visual language as closely as possible. The three references
-> define the material treatment, overall visual style and 3D character; adapt
-> the character for Quadcode AI rather than reproducing a literal 1:1 copy.
-
-</details>
-
-<details>
-<summary><strong>Hero animation prompt</strong></summary>
-
-> Animate this premium AI product landing page hero while preserving the exact
-> composition, layout and camera angle. Keep the camera static: no zoom,
-> movement, perspective change or UI motion. Animate only the 3D female artwork,
-> the upper and lower glass ribbons, and subtle atmospheric particles. Over a
-> seamless 10-second loop, dissolve the chrome-and-glass character into glowing
-> particles, reorganize them into a volumetric structure, form a thin blue
-> wireframe, rebuild the detailed model, and let glossy black, transparent
-> glass, chrome and liquid-metal materials flow across it before returning to
-> the original final render. Move the ribbons slowly like energy streams with
-> restrained blue-violet iridescence. Premium, minimal, elegant, Apple-style
-> motion design; luxury CGI, smooth easing, no aggressive effects. The ending
-> frame must match the beginning frame for infinite looping.
-
-</details>
-
-<details>
-<summary><strong>Pipeline prompts</strong></summary>
-
-1. `Concept art sketch of an ancient stone golem with mossy runes, painterly, rough brushstrokes, white background.`
-2. `Same golem as a grey clay 3D viewport screenshot, wireframe overlay, matcap shading, neutral studio.`
-3. `Same golem, textured, PBR look-dev presentation, neutral seamless grey studio background, flat even lighting, three floating material preview spheres next to the model (stone, moss, metal), no software UI, no panels, no text, clean minimal composition.` Negative prompt: `software interface, UI panels, buttons, text overlays, sky`.
-4. `Same golem, 8K cinematic final render, key light, volumetric fog, color graded, Octane style.`
-
-</details>
