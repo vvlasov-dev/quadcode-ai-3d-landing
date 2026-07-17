@@ -5,11 +5,7 @@ generalists (Upwork-style) who lose hours dispatching between Midjourney,
 Blender and a separate render pass. Value prop: *prompt → concept → mesh →
 render, in one window.*
 
-Ported from an internal design-tool export (`.dc.html` + a runtime that
-CDN-loaded React/Babel and transpiled JSX in the browser on every load) into a
-plain Vite + React + TypeScript project — a real, buildable, standard
-framework, matching the task's tech requirements, with an actual production
-build (minified, hashed, code-split) instead of runtime transpilation.
+![Quadcode AI landing page](docs/quadcode-landing-preview.png)
 
 ## Stack
 
@@ -17,7 +13,8 @@ build (minified, hashed, code-split) instead of runtime transpilation.
 - No CSS framework — plain CSS with custom properties, `clamp()` for fluid
   type, and real `@media` breakpoints (mobile ≤ 840px) instead of a
   JS-driven `ResizeObserver` scale hack
-- Zero runtime dependencies beyond React/ReactDOM (~66 KB gzip total JS+CSS)
+- Only React and ReactDOM as runtime dependencies (~72 KB gzip total JS+CSS
+  in the current production build)
 
 ## Structure
 
