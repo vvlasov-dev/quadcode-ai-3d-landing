@@ -160,7 +160,13 @@ function StartWatchButtons({ variant }: { variant: 'desktop' | 'mobile' }) {
         onClick={stripHashAfterJump}
         {...noDrag}
       >
-        <img src="/assets/buttons/btn-start-transparent.webp" alt="" draggable={false} />
+        <img
+          src={variant === 'mobile'
+            ? '/assets/buttons/btn-start-mobile-transparent.webp'
+            : '/assets/buttons/btn-start-transparent.webp'}
+          alt=""
+          draggable={false}
+        />
         <span className="label" {...startPress.labelHandlers}>
           <span>Start creating</span>
           <svg width="26" height="17" viewBox="0 0 26 17" fill="none"><path d="M1 8.5h23M16.5 1.5 24 8.5 16.5 15.5" stroke="#ffffff" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" /></svg>
