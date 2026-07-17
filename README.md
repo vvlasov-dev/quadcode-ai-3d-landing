@@ -46,29 +46,29 @@ both re-encoded from the original masters with `ffmpeg`:
 | Asset | Before | After | How |
 |---|---|---|---|
 | `hero-background.mp4` | 8.0 MB (1920×1080, ~6.6 Mbps) | 1.5 MB (H.264, CRF 25, faststart) | `+` `.webm`/VP9 alt (1.3 MB) |
-| `hero-mobile.webp` | — | 1.4 MB (420×908, 10 fps) | Portrait animated WebP fallback; no mobile autoplay prompt |
+| `hero-mobile.mp4` | 8.0 MB full-frame master | 2.6 MB (500×1080, H.264 High, CRF 17) | Portrait crop from the master; original 24 fps, no scaling or dropped frames, faststart |
 | `turntable.mp4` | 8.4 MB (1756×1180, ~17 Mbps) | 1.1 MB (scaled to 1280w, CRF 24, faststart) | `+` `.webm`/VP9 alt (1.1 MB) |
 | Buttons (4 glass PNGs) | 472 KB | 164 KB (WebP q90, alpha kept) | `ffmpeg` PNG→WebP |
 | Pipeline/use-case photos | — | 320 KB total (WebP) | exported directly as WebP |
 
 On desktop, the hero serves WebM first with an MP4 fallback and crossfades
 between two `<video>` elements so the source clip never shows a hard cut. On
-mobile it uses a portrait animated WebP, avoiding browser autoplay prompts and
-discarded off-screen pixels. The interactive
+mobile it serves a dedicated H.264 video cropped directly from the 6.6 Mbps
+master: the visible pixels retain their native scale and all 24 frames per
+second, while off-screen sides are not downloaded. The interactive
 UFO uses the optimized MP4 for predictable frame decoding into canvas. It only
 starts downloading once its section nears the viewport (`IntersectionObserver`,
 1600px runway), so it costs nothing on a visit that never scrolls that far.
 Both videos are muted, inline-safe and backed by lightweight poster frames.
 
-Total `dist/` is ~7.1 MB, of which ~6.9 MB is media/font assets and only
+Total `dist/` is ~8.3 MB, of which ~8.1 MB is media/font assets and only
 ~72 KB gzip is JS+CSS — the app shell itself is not the bottleneck; the motion
 assets are, and that's expected/acceptable per the brief ("видео может
 снижать [Lighthouse], это ок").
 
-Further, if needed: re-encode at a slightly higher CRF (27–28) if the target
-server's bandwidth is constrained, or serve the videos from behind a CDN with
-range-request support (both files are `faststart`-muxed, so byte-range
-seeking already works without one).
+Further, if needed: serve the videos from behind a CDN with range-request
+support. The MP4 files are `faststart`-muxed, so byte-range delivery already
+works without one.
 
 ## Deployment
 

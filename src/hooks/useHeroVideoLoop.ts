@@ -8,16 +8,55 @@ import { useEffect, useRef } from 'react';
 export function useHeroVideoLoop() {
   const videoARef = useRef<HTMLVideoElement | null>(null);
   const videoBRef = useRef<HTMLVideoElement | null>(null);
+  const mobileVideoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const a = videoARef.current;
     const b = videoBRef.current;
     if (!a || !b) return;
 
-    // Mobile uses an animated WebP instead of <video>, because iOS Low Power
-    // Mode and some data-saving browsers can require a tap even for muted,
-    // inline autoplay. The desktop video loop remains higher fidelity.
-    if (window.matchMedia('(max-width: 840px)').matches) return;
+    if (window.matchMedia('(max-width: 840px)').matches) {
+      const mobile = mobileVideoRef.current;
+      if (!mobile) return;
+
+      // Keep all autoplay requirements present both as DOM attributes and as
+      // properties. The attributes let Safari decide before React effects run;
+      // the properties cover restored tabs and browsers that defer media setup.
+      mobile.defaultMuted = true;
+      mobile.muted = true;
+      mobile.volume = 0;
+      mobile.loop = true;
+      mobile.playsInline = true;
+      mobile.setAttribute('muted', '');
+      mobile.setAttribute('playsinline', '');
+      mobile.setAttribute('webkit-playsinline', '');
+
+      const play = () => {
+        if (document.visibilityState === 'hidden' || !mobile.paused) return;
+        mobile.play().catch(() => {});
+      };
+
+      const resumeWhenVisible = () => {
+        if (document.visibilityState === 'visible') play();
+      };
+
+      mobile.addEventListener('canplay', play);
+      mobile.addEventListener('loadeddata', play);
+      document.addEventListener('visibilitychange', resumeWhenVisible);
+      window.addEventListener('pageshow', play);
+      document.addEventListener('touchstart', play, { passive: true });
+      document.addEventListener('pointerdown', play, { passive: true });
+      if (mobile.readyState >= 2) play();
+
+      return () => {
+        mobile.removeEventListener('canplay', play);
+        mobile.removeEventListener('loadeddata', play);
+        document.removeEventListener('visibilitychange', resumeWhenVisible);
+        window.removeEventListener('pageshow', play);
+        document.removeEventListener('touchstart', play);
+        document.removeEventListener('pointerdown', play);
+      };
+    }
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
@@ -101,5 +140,5 @@ export function useHeroVideoLoop() {
     };
   }, []);
 
-  return { videoARef, videoBRef };
+  return { videoARef, videoBRef, mobileVideoRef };
 }

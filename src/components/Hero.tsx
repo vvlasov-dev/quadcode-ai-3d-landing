@@ -183,7 +183,7 @@ function StartWatchButtons({ variant }: { variant: 'desktop' | 'mobile' }) {
 }
 
 export default function Hero() {
-  const { videoARef, videoBRef } = useHeroVideoLoop();
+  const { videoARef, videoBRef, mobileVideoRef } = useHeroVideoLoop();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -197,13 +197,21 @@ export default function Hero() {
           <source src="/assets/hero-background.webm" type="video/webm" media="(min-width: 841px)" />
           <source src="/assets/hero-background.mp4" type="video/mp4" media="(min-width: 841px)" />
         </video>
-        <img
-          className="hero-mobile-animation"
-          src="/assets/hero-mobile.webp"
-          alt=""
-          fetchPriority="high"
-          draggable={false}
-        />
+        <video
+          ref={mobileVideoRef}
+          className="hero-mobile-video"
+          poster="/assets/poster-hero-mobile.jpg"
+          muted
+          playsInline
+          autoPlay
+          loop
+          preload="auto"
+          controls={false}
+          disablePictureInPicture
+          tabIndex={-1}
+        >
+          <source src="/assets/hero-mobile.mp4" type="video/mp4" media="(max-width: 840px)" />
+        </video>
         <div className="hero-video-scrim" />
         <div className="hero-video-fade" />
       </div>
