@@ -1,0 +1,271 @@
+/* ---- Pipeline ---- */
+/* Source centers the whole head block (eyebrow/h2/p) with text-align:center
+   on its wrapper, and centers the prompt-chip pill separately below it via
+   margin:auto (it's a fit-content flex row, not text-align'd itself). This
+   was missing here — the head + chip were rendering left-aligned instead
+   of centered like every other section's head. */
+.pipeline-head { text-align: center; }
+.pipeline-head p { margin-left: auto; margin-right: auto; }
+.prompt-chip {
+  margin: 40px auto 0;
+  display: flex;
+  width: fit-content;
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 10px 18px 10px 10px;
+  background: linear-gradient(180deg, #ffffff, #f7f7fc);
+}
+.prompt-chip .tag {
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: #fff;
+  background: var(--eyebrow);
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+.prompt-chip .text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  color: var(--body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+/* Source truncates this with an ellipsis at any width, including mobile —
+   same nowrap/overflow:hidden there too. On a narrow phone that hides most
+   of the actual prompt text, which reads as broken rather than deliberate,
+   so on mobile only: let it wrap instead of clipping, and let the pill
+   grow into a rounded rectangle to fit it. Desktop is untouched. */
+@media (max-width: 840px) {
+  .prompt-chip {
+    align-items: flex-start;
+    border-radius: 18px;
+  }
+  .prompt-chip .text {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
+.pipeline-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 20px;
+}
+.pipeline-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
+.pipeline-card .frame { position: relative; aspect-ratio: 16/11; background: #f4f5f8; border-radius: 16px; overflow: hidden; }
+.pipeline-card .title { margin-top: 14px; font-size: 14.5px; font-weight: 600; color: #0b0b10; }
+.pipeline-card .desc { margin-top: 4px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+
+/* ---- Features ---- */
+.features-head { text-align: center; }
+.features-grid { margin-top: 44px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
+.feature-card {
+  border: 1px solid rgba(12,12,18,.08);
+  border-radius: 18px;
+  padding: 28px 26px;
+  background: linear-gradient(180deg, #ffffff, #fafafd);
+}
+.feature-card .title { margin-top: 18px; font-size: 18px; font-weight: 600; color: #0b0b10; }
+.feature-card p { margin: 8px 0 0; font-size: 15px; line-height: 1.55; color: var(--body); }
+
+/* ---- Showcase / turntable ---- */
+.showcase-head { text-align: center; }
+.showcase-head p { margin-left: auto; margin-right: auto; }
+.turntable {
+  position: relative;
+  max-width: 1040px;
+  margin: 44px auto 0;
+  aspect-ratio: 16/9;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  background: #f4f5f8;
+  touch-action: pan-y;
+}
+.turntable video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.turntable canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .15s ease; pointer-events: none; z-index: 1; }
+.turntable .drag-layer { position: absolute; inset: 0; z-index: 2; cursor: grab; user-select: none; -webkit-tap-highlight-color: transparent; }
+.turntable .drag-layer:active { cursor: grabbing; }
+.turntable .fallback {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 12px; color: var(--muted); text-align: center; padding: 24px; box-sizing: border-box;
+}
+.turntable .fallback .cap { font-size: 15px; font-weight: 600; color: var(--body); }
+.turntable .fallback .sub { font-size: 13.5px; max-width: 430px; line-height: 1.5; }
+.turntable .drag-hint {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 3; pointer-events: none;
+  display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: .08em;
+  color: var(--body); background: rgba(255,255,255,.88); border-radius: 999px; padding: 8px 15px;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+
+/* ---- Use case ---- */
+.usecase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.usecase-quote {
+  margin: 22px 0 0;
+  font-size: clamp(21px, 2vw, 27px);
+  line-height: 1.42;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #0b0b10;
+}
+.usecase-person { margin-top: 26px; display: flex; align-items: center; gap: 14px; }
+.usecase-avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex: none; }
+.usecase-person .name { font-size: 16px; font-weight: 600; color: #0b0b10; }
+.usecase-person .role { margin-top: 2px; font-size: 13.5px; color: var(--muted); }
+.usecase-tags { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
+.usecase-render { position: relative; aspect-ratio: 4/3; border-radius: 20px; overflow: hidden; background: #f4f5f8; }
+.usecase-render img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.usecase-caption { margin-top: 12px; font-size: 13px; color: #8a8a94; text-align: center; }
+
+/* ---- CTA ---- */
+.cta-box { max-width: 760px; margin: 0 auto; text-align: center; }
+.cta-box h2 { margin: 0; font-size: clamp(34px, 3.8vw, 58px); line-height: 1.1; font-weight: 500; letter-spacing: -0.015em; color: #0b0b10; }
+.cta-box .lede { margin: 18px auto 0; font-size: 17px; line-height: 1.6; color: var(--body); max-width: 480px; }
+.cta-form {
+  margin-top: 34px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.cta-form.is-leaving {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+.cta-form input {
+  flex: 1 1 260px;
+  max-width: 340px;
+  height: 52px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(12,12,18,.16);
+  padding: 0 22px;
+  font-size: 16px;
+  font-family: inherit;
+  color: #0b0b10;
+  background: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  text-align: left;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.cta-form input::placeholder { color: #a5a5ae; }
+.cta-form input:hover { border-color: rgba(12,12,18,.28); }
+.cta-form input:focus {
+  border-color: var(--eyebrow);
+  box-shadow: 0 0 0 4px rgba(9,50,185,.12);
+}
+.cta-form input.has-error {
+  border-color: #d64545;
+}
+.cta-form input.has-error:focus {
+  box-shadow: 0 0 0 4px rgba(214,69,69,.12);
+}
+.cta-form-error {
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: #d64545;
+  text-align: center;
+  animation: cta-error-in .22s cubic-bezier(.22,1,.36,1);
+}
+@keyframes cta-error-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cta-submit { width: 146px; height: 48px; flex: none; margin-top: 0; }
+.cta-submit .label { font-size: 15px; }
+.cta-submit.cta-hoverable:hover { transform: translateY(-1.5px) scale(1.02); filter: brightness(1.03); }
+/* `.cta-submit.cta-hoverable:hover` (3 selectors) beats `.cta-submit.is-pressed`
+   (2 selectors) on specificity alone, so without !important the hover lift
+   would silently win during a normal click (hover + press are both active
+   at once since the cursor never left the button) — see the longer note in
+   Hero.css above the equivalent Enterprise/Started/Start/Watch rules. */
+.cta-submit:active, .cta-submit.is-pressed { transform: translateY(1px) scale(.96) !important; filter: brightness(.92) !important; transition-duration: .07s, .07s !important; }
+.cta-done {
+  display: flex;
+  margin-top: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #0b0b10;
+  animation: cta-done-in .45s cubic-bezier(.22,1,.36,1);
+}
+.cta-done .check {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--eyebrow); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 15px;
+  animation: cta-check-pop .5s cubic-bezier(.34,1.56,.64,1) .12s both;
+}
+@keyframes cta-done-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes cta-check-pop {
+  0% { transform: scale(0); opacity: 0; }
+  65% { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-done, .cta-done .check, .cta-form-error { animation: none; }
+}
+.cta-fineprint { margin-top: 16px; font-size: 13px; color: #8a8a94; }
+
+/* ---- Footer ---- */
+.site-footer { border-top: 1px solid var(--hairline); padding: 26px clamp(20px,6vw,96px); }
+.site-footer .row { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.footer-logo { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: .05em; color: #14151d; }
+.footer-logo .brand { font-family: 'Sector','Onest',sans-serif; font-size: 16px; font-weight: 700; letter-spacing: .01em; color: #16181D; }
+.footer-logo .ai { margin-left: -6px; align-self: flex-start; margin-top: 1px; font-size: 9px; font-weight: 700; letter-spacing: .16em; color: #7B6CFF; }
+.footer-links { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; font-size: 13.5px; }
+.footer-links a { color: #7a7a84; }
+.footer-links a:hover { color: var(--eyebrow); }
+.footer-links .copyright { color: #a5a5ae; }
+
+/* ---- Legal modal ---- */
+.legal-overlay {
+  position: fixed; inset: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: rgba(12,12,18,.42);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.legal-dialog {
+  position: relative; width: min(680px, 100%); max-height: min(78vh, 760px);
+  display: flex; flex-direction: column;
+  background: #fff; border-radius: 20px;
+  box-shadow: 0 40px 90px -30px rgba(12,12,30,.45);
+  overflow: hidden;
+}
+.legal-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 28px 18px; border-bottom: 1px solid var(--hairline); }
+.legal-head .title { font-size: 19px; font-weight: 600; color: #0b0b10; }
+.legal-close {
+  width: 36px; height: 36px; flex: none; border: none; cursor: pointer; border-radius: 50%;
+  background: rgba(12,12,18,.05); display: flex; align-items: center; justify-content: center;
+  transition: background .2s ease;
+}
+.legal-close:hover { background: rgba(12,12,18,.1); }
+.legal-body { padding: 22px 28px 30px; overflow-y: auto; font-size: 14.5px; line-height: 1.65; color: var(--body); display: flex; flex-direction: column; gap: 14px; }
+.legal-body .meta { font-size: 12.5px; color: #8a8a94; }
+.legal-body strong { color: #0b0b10; }

@@ -1,0 +1,405 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: min(100svh, 56.25vw);
+  container-type: size;
+  overflow: hidden;
+  background: #ffffff;
+}
+@media (max-width: 840px) {
+  .hero { height: 100svh; }
+}
+
+/* Desktop: video stays a fixed 1920x1080 design box, centered and scaled
+   like the content canvas below — NOT stretched full-bleed across an
+   ultrawide window. Past 1920px-equivalent width, a soft gradient fades
+   the video to the plain background at each edge (matches the source's
+   JS-computed mask-image, done here with a container query instead: it
+   only kicks in once the hero's aspect ratio actually exceeds 16:9). */
+.hero-video-bg {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  --s: tan(atan2(100cqh, 1080px));
+  width: 1920px;
+  height: 1080px;
+  margin-left: calc(-960px * var(--s));
+  transform: scale(var(--s));
+  transform-origin: top left;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #f4f5f8;
+}
+@container (min-aspect-ratio: 16/9) {
+  .hero-video-bg {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 160px, #000 calc(100% - 160px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 160px, #000 calc(100% - 160px), transparent 100%);
+  }
+}
+@media (max-width: 840px) {
+  .hero-video-bg {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin-left: 0;
+    transform: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+}
+.hero-video.is-active { opacity: 1; }
+/* Mobile: full-bleed, no overlay on top of it at all — see the composition
+   comment on `.hero-main-mobile` below for why. 66% keeps the figure
+   framed in the open middle of the screen (the busiest part of the frame
+   sits right of center), clear of both the header/eyebrow above it and
+   the bottom-pinned buttons below it. */
+@media (max-width: 840px) {
+  .hero-video { object-position: 66% center; }
+}
+.hero-video-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(96deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.35) 38%, rgba(255,255,255,0) 62%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+/* Mobile deliberately gets NO scrim: legibility comes from composition
+   (text in the light upper zone, buttons pinned to the bottom, video left
+   fully clear in between) rather than any layer over the video. */
+.hero-video-fade {
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 38px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.5) 60%, #ffffff 97%);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-video { display: none; }
+  .hero-video-bg { background: #ffffff; }
+}
+
+.hero-glow {
+  text-shadow: 0 0 20px rgba(255,255,255,.92), 0 1px 3px rgba(255,255,255,.75);
+}
+
+/* ============ DESKTOP: 1920x1080 design canvas, uniformly scaled ============ */
+.hero-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  --s: tan(atan2(100cqh, 1080px));
+  width: calc(100cqw / var(--s));
+  height: 1080px;
+  transform-origin: 0 0;
+  transform: scale(var(--s));
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 840px) {
+  .hero-canvas { display: none; }
+}
+
+.hero-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 36px 35px 0 56px;
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.hero-logo {
+  display: flex;
+  align-items: center;
+  color: #16181D;
+  white-space: nowrap;
+  font-family: 'Sector', 'Onest', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+.hero-logo .ai {
+  margin-left: 5px;
+  align-self: flex-start;
+  margin-top: 1px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  color: #7B6CFF;
+}
+.hero-nav {
+  display: flex;
+  align-items: center;
+  gap: 52px;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+.hero-nav a { font-size: 15px; color: #45454f; transition: color .2s ease; }
+.hero-nav a:hover { color: var(--eyebrow); }
+.hero-header-ctas { display: flex; align-items: center; gap: 18px; }
+
+/* Cancel the global `a:hover{color:var(--eyebrow)}` for the logo — source
+   leaves it fully static, no hover effect of any kind. */
+.hero-logo:hover { color: #16181D; }
+
+.hero-main-desktop {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  padding: 205px 64px 120px 116px;
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.hero-main-desktop .eyebrow { font-size: 13px; letter-spacing: .34em; }
+.hero-main-desktop h1 {
+  margin: 26px 0 0;
+  font-size: 74px;
+  line-height: 1.08;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: #050508;
+}
+.hero-main-desktop p.lede {
+  margin: 22px 0 0;
+  font-size: 20px;
+  line-height: 1.55;
+  color: var(--body);
+  max-width: 620px;
+}
+.hero-ctas {
+  margin-top: 31px;
+  margin-left: -37px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.hero-ctas .watch-btn { margin-left: -6px; }
+
+/* ============ MOBILE: separate natural-flow block ============ */
+.hero-mobile-wrap {
+  display: none;
+  position: relative;
+  z-index: 1;
+  flex-direction: column;
+  height: 100%;
+}
+@media (max-width: 840px) {
+  .hero-mobile-wrap { display: flex; }
+}
+
+.burger {
+  width: 44px; height: 44px;
+  border: none; background: transparent;
+  padding: 11px; box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column; justify-content: center; align-items: center; gap: 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+.burger span {
+  display: block; width: 22px; height: 2px; border-radius: 2px; background: #14151d;
+  transition: transform .28s cubic-bezier(.22,1,.36,1), opacity .18s ease;
+}
+.burger.is-open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.burger.is-open span:nth-child(2) { opacity: 0; }
+.burger.is-open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+.mobile-menu {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 84px 28px 40px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: opacity .26s ease, transform .34s cubic-bezier(.22,1,.36,1);
+}
+.mobile-menu.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.mobile-menu nav { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; margin: auto 0; }
+.mobile-menu nav a { font-size: 23px; font-weight: 500; color: #14151d; padding: 10px 0; }
+.mobile-menu .menu-ctas {
+  display: flex; align-items: center; gap: 16px; margin-top: 0;
+  border-top: 1px solid rgba(20,21,29,.08); padding-top: 26px; align-self: stretch;
+}
+
+.hero-header-mobile {
+  position: relative;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px max(14px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left));
+}
+.hero-logo-mobile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.hero-logo-mobile .wordmark-mobile {
+  font-family: 'Sector', 'Onest', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: #16181D;
+}
+.hero-logo-mobile .ai-mobile {
+  margin-left: -6px;
+  align-self: flex-start;
+  margin-top: 1px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  color: #7B6CFF;
+}
+
+/* Same for the mobile wordmark. */
+.hero-logo-mobile:hover { color: #16181D; }
+
+/* Composition per handoff spec: text starts right under the header (top-
+   anchored, not bottom-anchored), video plays untouched in the open
+   middle, buttons pinned to the bottom via margin-top:auto on their own
+   wrapper below. Nothing sits on top of the video — legibility is purely
+   about WHERE things are placed, not what's layered over them. */
+.hero-main-mobile {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: 14px 20px 40px;
+}
+.hero-main-mobile .eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #0932b9;
+  text-shadow: 0 0 14px rgba(255,255,255,.9), 0 1px 3px rgba(255,255,255,.7);
+}
+.hero-main-mobile h1 {
+  margin: 14px 0 0;
+  max-width: 88%;
+  font-size: clamp(31px, 9.8vw, 46px);
+  line-height: 1.12;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #050508;
+  text-wrap: balance;
+  text-shadow: 0 0 18px rgba(255,255,255,.85), 0 1px 3px rgba(255,255,255,.7);
+}
+.hero-main-mobile p.lede {
+  margin: 12px 0 0;
+  max-width: 19em;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #33333d;
+  text-shadow: 0 0 14px rgba(255,255,255,.9), 0 1px 3px rgba(255,255,255,.7);
+}
+.hero-ctas-mobile {
+  margin-top: auto;
+  margin-left: -37px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.hero-ctas-mobile .watch-btn-mobile { margin-top: -66px; margin-left: 8px; }
+
+/* ============ glass-pill button geometry + interactions ============
+   Base transition is what every button shares; hover/active amounts are
+   per button type, matching the source exactly (small header pills lift
+   1.5px, the big hero CTAs lift 3px with more saturation/brightness).
+   Hover is only wired where the source defines it — the mobile-menu
+   Enterprise/GetStarted and the mobile Start/Watch buttons are active-only,
+   same as source (touch context). No label/icon padding animation on
+   Start/Watch — removed per feedback, the button-level lift+brightness is
+   the only motion now.
+   Each :active rule is paired with an equivalent `.is-pressed` class,
+   toggled explicitly via Pointer/Mouse events attached to the `.label`
+   span in the component (see Hero.tsx) — the outer `<a>` has
+   pointer-events:none, and while `click` reliably bubbles through that to
+   JS listeners on the `<a>`, down/up events do not, so press state is
+   driven from the one guaranteed-interactive element instead.
+   IMPORTANT: `.X.cta-hoverable:hover` (3 selectors) is MORE specific than
+   `.X.is-pressed`/`.X:active` (2 selectors) — without `!important` below,
+   a normal click (which is hovered *and* pressed at the same time, since
+   the cursor never left the button) would have its lift-on-hover transform
+   silently win over the push-down-on-press transform, so nothing visibly
+   moved. The `!important`s force press to always win over hover, which is
+   the only thing that made the press animation invisible on a plain click. */
+.cta-pill {
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1), filter .3s ease;
+}
+.cta-hoverable:hover { will-change: transform; }
+
+.cta-enterprise.cta-hoverable:hover { transform: translateY(-1.5px) scale(1.02); filter: brightness(1.02); }
+.cta-enterprise:active, .cta-enterprise.is-pressed { transform: translateY(1px) scale(.96) !important; filter: brightness(.97) !important; transition-duration: .07s, .07s !important; }
+
+.cta-started.cta-hoverable:hover { transform: translateY(-1.5px) scale(1.02); filter: brightness(1.03); }
+.cta-started:active, .cta-started.is-pressed { transform: translateY(1px) scale(.96) !important; filter: brightness(.92) !important; transition-duration: .07s, .07s !important; }
+
+.start-btn.cta-hoverable:hover { transform: translateY(-3px) scale(1.012); filter: brightness(1.04) saturate(1.03); }
+.start-btn:active, .start-btn.is-pressed { transform: translateY(2px) scale(.965) !important; filter: brightness(.92) !important; transition-duration: .07s, .07s !important; }
+
+.watch-btn.cta-hoverable:hover { transform: translateY(-3px) scale(1.012); }
+.watch-btn:active, .watch-btn.is-pressed { transform: translateY(2px) scale(.965) !important; transition-duration: .07s !important; }
+
+.start-btn img { width: 335px; height: auto; }
+.watch-btn img { width: 300px; height: auto; }
+.watch-btn-mobile img { width: 322px; height: auto; }
+.start-btn span.label {
+  left: 37px; top: 16px; width: 271px; height: 68px;
+  padding: 9px 22px 0 62px;
+  color: #fff;
+}
+.watch-btn span.label {
+  left: 27px; top: 19px; width: 252px; height: 64px;
+  padding: 4px 30px 0 39px;
+  color: #15151f;
+}
+.watch-btn-mobile span.label {
+  left: 29px; top: 20px; width: 271px; height: 69px;
+  padding: 4px 32px 0 42px;
+  color: #15151f;
+}
+.start-btn span.label, .watch-btn span.label {
+  position: absolute;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: .01em;
+  box-sizing: border-box;
+}

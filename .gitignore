@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-ssr/
+
+.env
+.env.*
+*.local
+
+dev-server.log
+dev-server-error.log
+*.log
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
