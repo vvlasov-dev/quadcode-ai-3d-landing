@@ -198,7 +198,7 @@ export default function Hero() {
         <video
           ref={mobileVideoRef}
           className="hero-mobile-video"
-          poster="/assets/poster-hero-mobile.jpg"
+          poster="/assets/poster-hero-mobile.jpg?v=62-framing"
           muted
           playsInline
           autoPlay
@@ -208,7 +208,7 @@ export default function Hero() {
           disablePictureInPicture
           tabIndex={-1}
         >
-          <source src="/assets/hero-mobile.mp4" type="video/mp4" media="(max-width: 840px)" />
+          <source src="/assets/hero-mobile.mp4?v=62-framing" type="video/mp4" media="(max-width: 840px)" />
         </video>
         <div className="hero-video-scrim" />
         <div className="hero-video-fade" />
