@@ -14,8 +14,12 @@ export function useHeroVideoLoop() {
     const b = videoBRef.current;
     if (!a || !b) return;
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      && window.matchMedia('(min-width: 841px)').matches;
+    // Mobile uses an animated WebP instead of <video>, because iOS Low Power
+    // Mode and some data-saving browsers can require a tap even for muted,
+    // inline autoplay. The desktop video loop remains higher fidelity.
+    if (window.matchMedia('(max-width: 840px)').matches) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
       a.pause();
       b.pause();

@@ -190,13 +190,20 @@ export default function Hero() {
     <div className="hero" data-screen-label="Hero">
       <div className="hero-video-bg" aria-hidden="true">
         <video ref={videoARef} className="hero-video" poster="/assets/poster-hero.jpg" muted playsInline autoPlay preload="auto">
-          <source src="/assets/hero-background.webm" type="video/webm" />
-          <source src="/assets/hero-background.mp4" type="video/mp4" />
+          <source src="/assets/hero-background.webm" type="video/webm" media="(min-width: 841px)" />
+          <source src="/assets/hero-background.mp4" type="video/mp4" media="(min-width: 841px)" />
         </video>
         <video ref={videoBRef} className="hero-video" poster="/assets/poster-hero.jpg" muted playsInline preload="metadata">
-          <source src="/assets/hero-background.webm" type="video/webm" />
-          <source src="/assets/hero-background.mp4" type="video/mp4" />
+          <source src="/assets/hero-background.webm" type="video/webm" media="(min-width: 841px)" />
+          <source src="/assets/hero-background.mp4" type="video/mp4" media="(min-width: 841px)" />
         </video>
+        <img
+          className="hero-mobile-animation"
+          src="/assets/hero-mobile.webp"
+          alt=""
+          fetchPriority="high"
+          draggable={false}
+        />
         <div className="hero-video-scrim" />
         <div className="hero-video-fade" />
       </div>
