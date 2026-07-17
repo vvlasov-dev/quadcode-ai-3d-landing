@@ -221,16 +221,17 @@
 .cta-done .message { min-width: 0; }
 @media (max-width: 840px) {
   .cta-done {
-    width: min(100%, 330px);
+    width: fit-content;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
-    align-items: flex-start;
+    align-items: center;
     gap: 10px;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.4;
     text-align: left;
+    white-space: nowrap;
   }
-  .cta-done .check { margin-top: -1px; }
 }
 @keyframes cta-done-in {
   from { opacity: 0; transform: translateY(10px); }
