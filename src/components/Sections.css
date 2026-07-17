@@ -213,10 +213,24 @@
   animation: cta-done-in .45s cubic-bezier(.22,1,.36,1);
 }
 .cta-done .check {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%;
   background: var(--eyebrow); color: #fff;
   display: inline-flex; align-items: center; justify-content: center; font-size: 15px;
   animation: cta-check-pop .5s cubic-bezier(.34,1.56,.64,1) .12s both;
+}
+.cta-done .message { min-width: 0; }
+@media (max-width: 840px) {
+  .cta-done {
+    width: min(100%, 330px);
+    margin-left: auto;
+    margin-right: auto;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 16px;
+    line-height: 1.4;
+    text-align: left;
+  }
+  .cta-done .check { margin-top: -1px; }
 }
 @keyframes cta-done-in {
   from { opacity: 0; transform: translateY(10px); }

@@ -14,7 +14,8 @@ export function useHeroVideoLoop() {
     const b = videoBRef.current;
     if (!a || !b) return;
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      && window.matchMedia('(min-width: 841px)').matches;
     if (reduced) {
       a.pause();
       b.pause();
@@ -32,6 +33,13 @@ export function useHeroVideoLoop() {
     let active = a;
     let inactive = b;
     let crossfading = false;
+    let fadeTimer: number | undefined;
+    let disposed = false;
+
+    const resumeActive = () => {
+      if (document.visibilityState === 'hidden' || !active.paused) return;
+      active.play().catch(() => {});
+    };
 
     const onTimeUpdate = (event: Event) => {
       if (event.target !== active || crossfading) return;
@@ -41,17 +49,25 @@ export function useHeroVideoLoop() {
       if (active.currentTime < duration - lead) return;
       crossfading = true;
       inactive.currentTime = 0;
-      inactive.play().catch(() => {});
-      inactive.classList.add('is-active');
-      active.classList.remove('is-active');
-      setTimeout(() => {
-        const prev = active;
-        active = inactive;
-        inactive = prev;
-        prev.pause();
-        prev.currentTime = 0;
+      inactive.play().then(() => {
+        if (disposed) return;
+        inactive.classList.add('is-active');
+        active.classList.remove('is-active');
+        fadeTimer = window.setTimeout(() => {
+          const prev = active;
+          active = inactive;
+          inactive = prev;
+          prev.pause();
+          prev.currentTime = 0;
+          crossfading = false;
+        }, FADE_MS);
+      }).catch(() => {
+        // Some mobile browsers defer playback until a user gesture. Keep the
+        // currently visible clip alive instead of fading to a paused twin.
+        active.currentTime = 0;
+        active.play().catch(() => {});
         crossfading = false;
-      }, FADE_MS);
+      });
     };
 
     const start = () => {
@@ -62,12 +78,22 @@ export function useHeroVideoLoop() {
 
     a.addEventListener('timeupdate', onTimeUpdate);
     b.addEventListener('timeupdate', onTimeUpdate);
+    document.addEventListener('visibilitychange', resumeActive);
+    window.addEventListener('pageshow', resumeActive);
+    document.addEventListener('touchstart', resumeActive, { passive: true });
+    document.addEventListener('pointerdown', resumeActive, { passive: true });
     if (a.readyState >= 1) start();
     else a.addEventListener('loadedmetadata', start, { once: true });
 
     return () => {
+      disposed = true;
+      if (fadeTimer !== undefined) window.clearTimeout(fadeTimer);
       a.removeEventListener('timeupdate', onTimeUpdate);
       b.removeEventListener('timeupdate', onTimeUpdate);
+      document.removeEventListener('visibilitychange', resumeActive);
+      window.removeEventListener('pageshow', resumeActive);
+      document.removeEventListener('touchstart', resumeActive);
+      document.removeEventListener('pointerdown', resumeActive);
     };
   }, []);
 

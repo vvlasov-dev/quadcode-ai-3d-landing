@@ -189,7 +189,7 @@ export default function Hero() {
   return (
     <div className="hero" data-screen-label="Hero">
       <div className="hero-video-bg" aria-hidden="true">
-        <video ref={videoARef} className="hero-video" poster="/assets/poster-hero.jpg" muted playsInline preload="auto">
+        <video ref={videoARef} className="hero-video" poster="/assets/poster-hero.jpg" muted playsInline autoPlay preload="auto">
           <source src="/assets/hero-background.webm" type="video/webm" />
           <source src="/assets/hero-background.mp4" type="video/mp4" />
         </video>

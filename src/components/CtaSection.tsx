@@ -99,7 +99,7 @@ export default function CtaSection() {
           ) : (
             <div className="cta-done">
               <span className="check">✓</span>
-              You&rsquo;re on the list — invite lands this month.
+              <span className="message">You&rsquo;re on the list — invite lands this month.</span>
             </div>
           )}
           <div className="cta-fineprint">No card required. Cancel the other five subscriptions later.</div>
