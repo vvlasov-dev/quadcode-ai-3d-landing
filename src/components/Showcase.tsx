@@ -4,7 +4,15 @@ import { useTurntable } from '../hooks/useTurntable';
 export default function Showcase() {
   const headRef = useReveal<HTMLDivElement>();
   const boxRef = useReveal<HTMLDivElement>();
-  const { containerRef, canvasRef, missing, ready, onPointerDown, onPointerMove, onPointerUp } = useTurntable('/assets/turntable.mp4');
+  const {
+    containerRef,
+    videoRef,
+    missing,
+    ready,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
+  } = useTurntable('/assets/turntable.mp4');
 
   return (
     <section className="page-section" data-screen-label="Showcase">
@@ -18,14 +26,21 @@ export default function Showcase() {
         <div ref={boxRef} className="reveal">
           <div ref={containerRef} className="turntable">
             {!missing && (
-              <video src="/assets/turntable.mp4" poster="/assets/poster-turntable.jpg" muted playsInline preload="none" style={{ display: ready ? 'none' : 'block' }} />
+              <video
+                ref={videoRef}
+                src="/assets/turntable.mp4"
+                poster="/assets/poster-turntable.jpg"
+                muted
+                playsInline
+                preload="none"
+                className={ready ? 'is-ready' : ''}
+              />
             )}
-            <canvas ref={canvasRef} />
             {missing && (
               <div className="fallback">
                 <svg width="34" height="34" viewBox="0 0 26 26" fill="none"><path d="M13 2.5 22.5 8v10L13 23.5 3.5 18V8Z M13 23.5V13.5 M3.5 8 13 13.5 22.5 8" stroke="#9a9aa6" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" /></svg>
-                <div className="cap">Turntable video not added yet</div>
-                <div className="sub">Add a seamless 360° orbit clip as assets/turntable.mp4 — drag-to-rotate switches on automatically.</div>
+                <div className="cap">Turntable preview unavailable</div>
+                <div className="sub">The interactive video could not load on this device.</div>
               </div>
             )}
             <div className="drag-layer" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} />
