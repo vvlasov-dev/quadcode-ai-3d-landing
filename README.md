@@ -47,7 +47,7 @@ both re-encoded from the original masters with `ffmpeg`:
 |---|---|---|---|
 | `hero-background.mp4` | 8.0 MB (1920×1080, ~6.6 Mbps) | 5.8 MB (H.264 High, CRF 17, ~4.8 Mbps) | Original 24 fps and 1920×1080 frame retained; faststart |
 | `hero-mobile.mp4` | 8.0 MB full-frame master | 2.0 MB (500×1080, H.264 High, CRF 17) | Portrait crop matching the source's 62% mobile framing; original 24 fps, no scaling or dropped frames, faststart |
-| `turntable.mp4` | 8.4 MB (1756×1180, ~17 Mbps) | 3.2 MB (1280×860, H.264 High, CRF 17) | Original 24 fps retained; keyframe every 4 frames for responsive native scrubbing on desktop and mobile; faststart |
+| `turntable.mp4` | 8.4 MB (1756×1180, ~17 Mbps) | 6.1 MB (1280×860, H.264 High, CRF 17) | Re-encoded directly from the master; original 24 fps and all 97 frames retained; every frame is a keyframe for consistent native scrubbing; faststart |
 | Buttons | 472 KB source PNGs | 318 KB total (4 WebP files, alpha kept) | WebP export; the Start asset is shared by desktop and mobile |
 | Pipeline/use-case photos | — | 320 KB total (WebP) | exported directly as WebP |
 
@@ -57,15 +57,17 @@ a hard cut. On
 mobile it serves a dedicated H.264 video cropped directly from the 6.6 Mbps
 master: the visible pixels retain their native scale and all 24 frames per
 second, while off-screen sides are not downloaded. The interactive UFO uses
-a single keyframe-dense H.264 MP4 through the browser's hardware video decoder
-on desktop and mobile. Dragging seeks the native timeline instead of retaining
-a large array of decoded canvas frames. It starts downloading only once its
-section nears the viewport (`IntersectionObserver`, 1600px runway), so it costs
-nothing on a visit that never scrolls that far. Both viewport sizes use the
-same 65-position sampling, sway amplitude, speed, easing and mirrored end
-behavior. The video is muted, inline-safe and backed by a lightweight poster.
+a single all-intra-frame H.264 MP4 through the browser's hardware video decoder
+on desktop and mobile. Dragging seeks all 97 native frames instead of retaining
+a large array of decoded canvas frames. The virtual position pauses while the
+browser is decoding, preventing slower mobile devices from skipping farther
+between displayed frames than desktop. Loading is triggered by an
+`IntersectionObserver` with a 1600px runway, leaving the poster in place until
+the media is ready. Both viewport sizes use the same sway amplitude, speed,
+easing and mirrored end behavior. The versioned video URL prevents a previously
+cached encode from being reused after deploy.
 
-Total `dist/` is ~12.5 MB, of which ~12.2 MB is media/font assets and only
+Total `dist/` is ~15.3 MB, of which ~15.1 MB is media/font assets and only
 ~72 KB gzip is JS+CSS — the app shell itself is not the bottleneck; the motion
 assets are, and that's expected/acceptable per the brief ("видео может
 снижать [Lighthouse], это ок").
@@ -81,7 +83,7 @@ Measured against the live HTTPS deployment on 18 July 2026 with Lighthouse
 
 | Profile | Performance | Accessibility | Best Practices | SEO | FCP | LCP | TBT | CLS |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Mobile | **73** | 95 | 100 | 92 | 3.9 s | 4.6 s | 0 ms | 0.078 |
+| Mobile | **75** | 95 | 100 | 92 | 3.9 s | 4.3 s | 0 ms | 0.063 |
 | Desktop | **81** | 93 | 100 | 92 | 1.4 s | 2.2 s | 0 ms | 0.001 |
 
 The task's Lighthouse Performance requirement (`> 70`) is met on both
@@ -129,7 +131,7 @@ underlying generation model separately so the workflow stays reproducible.
 | Hero concept still | Higgsfield · GPT Image 2 | Rework three visual references into a Quadcode AI landing hero for professional 3D designers; English copy, Quadcode AI branding and a light neutral palette | 6 | Selected composition integrated into the live layout; exported as a 1280×720 JPEG poster |
 | Hero animation | Higgsfield · Seedance 2 | Static premium SaaS hero; animate only the 3D character creation process, glass ribbons and subtle particles; seamless 10-second loop | 3 | H.264 MP4 encode; dual-video crossfade hides the residual source seam |
 | UFO still | Higgsfield · GPT Image 2 | Generate an original iridescent UFO from the supplied references, using the reference palette and liquid-glass drips; NFT-art finish, no UI or text | 2 | Cropped and exported as the 1280×860 turntable poster |
-| UFO turntable video | Higgsfield · Kling 3.0 Turbo | Camera completes one constant-speed 360° orbit around a centered static UFO and returns to the exact starting angle; background unchanged | 2 | 1280×860 H.264, keyframe every 4 frames, native video scrubbing on desktop and mobile; lazy-loaded |
+| UFO turntable video | Higgsfield · Kling 3.0 Turbo | Camera completes one constant-speed 360° orbit around a centered static UFO and returns to the exact starting angle; background unchanged | 2 | Re-encoded from the 1756×1180 master as 1280×860 all-I H.264; all 97 frames retained for native desktop/mobile scrubbing; lazy-loaded and cache-busted |
 | Pipeline 01 — Concept | Higgsfield · GPT Image 2 | Ancient stone golem with mossy runes, painterly concept sketch, rough brushstrokes, white background | 1 | WebP export |
 | Pipeline 02 — Mesh | Higgsfield · GPT Image 2 | Same golem as a grey clay 3D viewport render with wireframe overlay, matcap shading and a neutral studio | 1 | Previous stage used as visual reference; WebP export |
 | Pipeline 03 — Materials | Higgsfield · GPT Image 2 | Same golem as a clean PBR look-dev presentation with stone, moss and metal material spheres | 1 | Previous stage used as visual reference; UI/text excluded with a negative prompt; WebP export |

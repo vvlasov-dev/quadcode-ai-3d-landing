@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * Drives the keyframe-dense turntable MP4 as an interactive timeline.
+ * Drives the all-intra-frame turntable MP4 as an interactive timeline.
  * The browser keeps decoding in its native video pipeline instead of retaining
  * dozens of ImageBitmaps in memory. Idle sway and pointer drag share the same
  * reflected position space, so both reverse cleanly at either end.
@@ -36,7 +36,8 @@ export function useTurntable(src: string) {
     if (index === indexRef.current) return;
 
     indexRef.current = index;
-    const time = 0.02 + (index / (count - 1)) * (duration - 0.1);
+    const frameDuration = duration / count;
+    const time = Math.min(duration - frameDuration / 2, index * frameDuration + 0.001);
     try {
       video.currentTime = time;
     } catch {
@@ -52,16 +53,24 @@ export function useTurntable(src: string) {
       const target = targetRef.current;
       if (!video || target == null || video.readyState < HTMLMediaElement.HAVE_METADATA) return;
 
-      positionRef.current += (target - positionRef.current) * 0.14;
-      drawFrame(positionRef.current);
-      const settled = Math.abs(target - positionRef.current) < 0.25;
-      if (!draggingRef.current && settled) {
-        targetRef.current = null;
+      // Do not advance the virtual position while the previous frame is still
+      // decoding. Advancing here made slower mobile decoders skip a visibly
+      // larger distance than desktop between two presented frames.
+      if (video.seeking) {
+        seekRafRef.current = requestAnimationFrame(seek);
         return;
       }
-      if (draggingRef.current || video.seeking || !settled) {
-        seekRafRef.current = requestAnimationFrame(seek);
+
+      positionRef.current += (target - positionRef.current) * 0.28;
+      drawFrame(positionRef.current);
+      const settled = Math.abs(target - positionRef.current) < 0.25;
+      if (settled) {
+        positionRef.current = target;
+        drawFrame(positionRef.current);
+        if (!draggingRef.current) targetRef.current = null;
+        return;
       }
+      seekRafRef.current = requestAnimationFrame(seek);
     };
     seekRafRef.current = requestAnimationFrame(seek);
   };
@@ -83,7 +92,7 @@ export function useTurntable(src: string) {
       const count = frameCountRef.current;
       const delta = Math.min(0.05, (timestamp - last) / 1000);
       last = timestamp;
-      if (!video || !count || !visibleRef.current) return;
+      if (!video || !count || !visibleRef.current || video.seeking) return;
 
       if (draggingRef.current || seekRafRef.current) {
         idleWait = 5;
@@ -141,7 +150,9 @@ export function useTurntable(src: string) {
       if (!duration) return;
       initialized = true;
       durationRef.current = duration;
-      frameCountRef.current = Math.min(96, Math.max(48, Math.round(duration * 16)));
+      // The source is 24 fps and contains 97 frames over 4.04 seconds. Keep
+      // every real frame available to drag instead of reducing it to 16 fps.
+      frameCountRef.current = Math.max(2, Math.round(duration * 24));
       positionRef.current = 0;
       indexRef.current = -1;
       video.pause();

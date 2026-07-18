@@ -12,7 +12,7 @@ export default function Showcase() {
     onPointerDown,
     onPointerMove,
     onPointerUp,
-  } = useTurntable('/assets/turntable.mp4');
+  } = useTurntable('/assets/turntable.mp4?v=20260718-all-i');
 
   return (
     <section className="page-section" data-screen-label="Showcase">
@@ -28,7 +28,7 @@ export default function Showcase() {
             {!missing && (
               <video
                 ref={videoRef}
-                src="/assets/turntable.mp4"
+                src="/assets/turntable.mp4?v=20260718-all-i"
                 poster="/assets/poster-turntable.jpg"
                 muted
                 playsInline
