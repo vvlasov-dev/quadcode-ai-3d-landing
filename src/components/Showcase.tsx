@@ -1,5 +1,6 @@
 import { useReveal } from '../hooks/useReveal';
 import { useTurntable } from '../hooks/useTurntable';
+import { asset } from '../lib/asset';
 
 export default function Showcase() {
   const headRef = useReveal<HTMLDivElement>();
@@ -12,7 +13,7 @@ export default function Showcase() {
     onPointerDown,
     onPointerMove,
     onPointerUp,
-  } = useTurntable('/assets/turntable.mp4?v=20260718-all-i');
+  } = useTurntable(asset('assets/turntable.mp4?v=20260718-all-i'));
 
   return (
     <section className="page-section" data-screen-label="Showcase">
@@ -28,8 +29,8 @@ export default function Showcase() {
             {!missing && (
               <video
                 ref={videoRef}
-                src="/assets/turntable.mp4?v=20260718-all-i"
-                poster="/assets/poster-turntable.jpg"
+                src={asset('assets/turntable.mp4?v=20260718-all-i')}
+                poster={asset('assets/poster-turntable.jpg')}
                 muted
                 playsInline
                 preload="none"

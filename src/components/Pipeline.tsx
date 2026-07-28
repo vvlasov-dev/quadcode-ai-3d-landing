@@ -1,4 +1,5 @@
 import { useReveal } from '../hooks/useReveal';
+import { asset } from '../lib/asset';
 
 const STAGES = [
   { id: 'pipeline-concept', title: '01 · Concept', desc: 'Frame straight from the prompt' },
@@ -29,7 +30,7 @@ export default function Pipeline() {
           {STAGES.map((s) => (
             <div className="pipeline-card" key={s.id}>
               <div className="frame">
-                <img src={`/assets/pipeline/${s.id}.webp`} alt={s.title} loading="lazy" width={400} height={275} />
+                <img src={asset(`assets/pipeline/${s.id}.webp`)} alt={s.title} loading="lazy" width={400} height={275} />
               </div>
               <div className="title">{s.title}</div>
               <div className="desc">{s.desc}</div>

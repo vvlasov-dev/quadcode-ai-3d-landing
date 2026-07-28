@@ -1,4 +1,5 @@
 import { useReveal } from '../hooks/useReveal';
+import { asset } from '../lib/asset';
 
 const TAGS = ['14 h → 3 h per hero shot', '5 subscriptions → 1', 'Zero exports'];
 
@@ -16,7 +17,7 @@ export default function UseCase() {
             &ldquo;I used to lose whole evenings gluing Midjourney frames to Blender. Now the concept, the mesh and the final shot happen in one window — a product hero shot takes an evening coffee, not a weekend.&rdquo;
           </blockquote>
           <div className="usecase-person">
-            <img className="usecase-avatar" src="/assets/pipeline/usecase-avatar.webp" alt="Asya Kim" width={56} height={56} loading="lazy" />
+            <img className="usecase-avatar" src={asset('assets/pipeline/usecase-avatar.webp')} alt="Asya Kim" width={56} height={56} loading="lazy" />
             <div>
               <div className="name">Asya Kim</div>
               <div className="role">Freelance 3D generalist · product visualization, Upwork Top Rated</div>
@@ -28,7 +29,7 @@ export default function UseCase() {
         </div>
         <div ref={rightRef} className="reveal">
           <div className="usecase-render">
-            <img src="/assets/pipeline/usecase-render.webp" alt="Asya's hero shot" loading="lazy" />
+            <img src={asset('assets/pipeline/usecase-render.webp')} alt="Asya's hero shot" loading="lazy" />
           </div>
           <div className="usecase-caption">Client-ready hero shot — prompted, meshed and rendered in one Quadcode session.</div>
         </div>

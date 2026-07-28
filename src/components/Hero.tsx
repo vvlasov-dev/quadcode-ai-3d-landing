@@ -1,5 +1,6 @@
 import { useRef, useState, type DragEvent, type MouseEvent } from 'react';
 import { useHeroVideoLoop } from '../hooks/useHeroVideoLoop';
+import { asset } from '../lib/asset';
 import './Hero.css';
 
 const NAV_LINKS = [
@@ -113,7 +114,7 @@ function EnterpriseCta({ variant }: { variant: 'header' | 'menu' }) {
       {...noDrag}
     >
       <img
-        src="/assets/buttons/btn-enterprise-transparent.webp"
+        src={asset('assets/buttons/btn-enterprise-transparent.webp')}
         alt=""
         draggable={false}
         style={{ position: 'absolute', left: g.imgLeft, top: g.imgTop, width: g.imgW, maxWidth: 'none' }}
@@ -135,7 +136,7 @@ function GetStartedCta({ variant, onNavigate }: { variant: 'header' | 'menu'; on
       {...noDrag}
     >
       <img
-        src="/assets/buttons/btn-getstarted-transparent.webp"
+        src={asset('assets/buttons/btn-getstarted-transparent.webp')}
         alt=""
         draggable={false}
         style={{ position: 'absolute', left: g.imgLeft, top: g.imgTop, width: g.imgW, maxWidth: 'none' }}
@@ -161,7 +162,7 @@ function StartWatchButtons({ variant }: { variant: 'desktop' | 'mobile' }) {
         {...noDrag}
       >
         <img
-          src="/assets/buttons/btn-start-transparent.webp"
+          src={asset('assets/buttons/btn-start-transparent.webp')}
           alt=""
           draggable={false}
         />
@@ -176,7 +177,7 @@ function StartWatchButtons({ variant }: { variant: 'desktop' | 'mobile' }) {
         onClick={stripHashAfterJump}
         {...noDrag}
       >
-        <img src="/assets/buttons/btn-watch-transparent.webp" alt="" draggable={false} />
+        <img src={asset('assets/buttons/btn-watch-transparent.webp')} alt="" draggable={false} />
         <span className="label" {...watchPress.labelHandlers}>
           <span>See how it works</span>
           <svg width="15" height="17" viewBox="0 0 15 17" fill="none"><path d="M2 2.6v11.8c0 1.15 1.25 1.85 2.2 1.22l9.4-5.9c.9-.57.9-1.87 0-2.44L4.2 1.38C3.25.75 2 1.45 2 2.6Z" fill="#101018" /></svg>
@@ -193,16 +194,16 @@ export default function Hero() {
   return (
     <div className="hero" data-screen-label="Hero">
       <div className="hero-video-bg" aria-hidden="true">
-        <video ref={videoARef} className="hero-video" poster="/assets/poster-hero.jpg" muted playsInline autoPlay preload="auto">
-          <source src="/assets/hero-background.mp4" type="video/mp4" media="(min-width: 841px)" />
+        <video ref={videoARef} className="hero-video" poster={asset('assets/poster-hero.jpg')} muted playsInline autoPlay preload="auto">
+          <source src={asset('assets/hero-background.mp4')} type="video/mp4" media="(min-width: 841px)" />
         </video>
-        <video ref={videoBRef} className="hero-video" poster="/assets/poster-hero.jpg" muted playsInline preload="metadata">
-          <source src="/assets/hero-background.mp4" type="video/mp4" media="(min-width: 841px)" />
+        <video ref={videoBRef} className="hero-video" poster={asset('assets/poster-hero.jpg')} muted playsInline preload="metadata">
+          <source src={asset('assets/hero-background.mp4')} type="video/mp4" media="(min-width: 841px)" />
         </video>
         <video
           ref={mobileVideoRef}
           className="hero-mobile-video"
-          poster="/assets/poster-hero-mobile.jpg?v=62-framing"
+          poster={asset('assets/poster-hero-mobile.jpg?v=62-framing')}
           muted
           playsInline
           autoPlay
@@ -212,7 +213,7 @@ export default function Hero() {
           disablePictureInPicture
           tabIndex={-1}
         >
-          <source src="/assets/hero-mobile.mp4?v=62-framing" type="video/mp4" media="(max-width: 840px)" />
+          <source src={asset('assets/hero-mobile.mp4?v=62-framing')} type="video/mp4" media="(max-width: 840px)" />
         </video>
         <div className="hero-video-scrim" />
         <div className="hero-video-fade" />

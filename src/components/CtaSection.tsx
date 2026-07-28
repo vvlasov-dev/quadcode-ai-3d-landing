@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { useReveal } from '../hooks/useReveal';
+import { asset } from '../lib/asset';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -86,7 +87,7 @@ export default function CtaSection() {
                   onContextMenu={(e) => e.preventDefault()}
                 >
                   <img
-                    src="/assets/buttons/btn-getstarted-transparent.webp"
+                    src={asset('assets/buttons/btn-getstarted-transparent.webp')}
                     alt=""
                     draggable={false}
                     style={{ position: 'absolute', left: -16, top: -11, width: 175, maxWidth: 'none' }}
