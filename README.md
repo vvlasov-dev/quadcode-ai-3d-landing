@@ -5,7 +5,7 @@ generalists (Upwork-style) who lose hours dispatching between Midjourney,
 Blender and a separate render pass. Value prop: *prompt → concept → mesh →
 render, in one window.*
 
-[Live deployment](https://155.212.130.99/)
+[Live deployment](https://vvlasov-dev.github.io/quadcode-ai-3d-landing/)
 
 ![Quadcode AI landing page](docs/quadcode-landing-preview.png)
 
@@ -26,6 +26,7 @@ src/
   hooks/        useHeroVideoLoop (video crossfade), useTurntable
                 (native video drag-to-rotate), useReveal
                 (scroll-in animation)
+  lib/          asset (resolves public/ paths against the deploy base)
 public/assets/  video, fonts, compressed images
 ```
 
@@ -78,7 +79,7 @@ works without one.
 
 ## Lighthouse — production deployment
 
-Measured against the live HTTPS deployment on 18 July 2026 with Lighthouse
+Measured on 18 July 2026 against the original nginx deployment with Lighthouse
 13.4.0 and its simulated mobile/desktop throttling profiles:
 
 | Profile | Performance | Accessibility | Best Practices | SEO | FCP | LCP | TBT | CLS |
@@ -92,24 +93,29 @@ measurements; scores may vary slightly between runs.
 
 ## Deployment
 
-The production build is served by nginx at
-[https://155.212.130.99/](https://155.212.130.99/). HTTP redirects to HTTPS;
-the IP endpoint uses a publicly trusted, automatically renewed Let's Encrypt
-certificate.
+The site is published to GitHub Pages at
+[https://vvlasov-dev.github.io/quadcode-ai-3d-landing/](https://vvlasov-dev.github.io/quadcode-ai-3d-landing/),
+built and deployed automatically by `.github/workflows/deploy.yml` on every
+push to `main`.
 
-To deploy another copy, use one of these options:
+Pages serves a project repo from a subfolder, so `vite.config.ts` sets `base`
+to `/quadcode-ai-3d-landing/` and every reference to a file in `public/` goes
+through the `asset()` helper in `src/lib/asset.ts`, which resolves paths
+against `import.meta.env.BASE_URL`. Set `BASE_PATH=/` at build time to target
+a root-served host instead.
 
-Three options, pick what fits your box:
+To deploy your own copy elsewhere, pick what fits your box:
 
 **1. Docker (simplest, no Node/nginx setup needed on the host)**
 ```bash
 docker build -t quadcode-hero .
 docker run -d -p 80:80 --name quadcode-hero quadcode-hero
 ```
+The image builds with `BASE_PATH=/`, since it serves from the domain root.
 
 **2. Plain nginx (no Docker)**
 ```bash
-npm run build
+BASE_PATH=/ npm run build
 rsync -avz --delete dist/ user@your-server:/var/www/quadcode-hero/
 # then point an nginx server block's `root` at that path — nginx.conf in
 # this repo has the gzip + cache-control rules to copy into your site config
@@ -117,7 +123,7 @@ rsync -avz --delete dist/ user@your-server:/var/www/quadcode-hero/
 
 **3. Any static file host** (the `dist/` folder is fully static — no server-side
 code, no environment variables) — copy it wherever you already serve static
-files from.
+files from. Use `BASE_PATH=` to match the subpath it will be served from.
 
 ## Asset brief
 
